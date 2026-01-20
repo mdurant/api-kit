@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 | Routes for API version 1.
 |
 */
+// Routes are now loaded automatically from config/apiroute.php
+// See routes/api/v1.php for version 1 routes
 
 // Public routes with auth rate limiter (5/min - brute force protection)
 Route::middleware('throttle:auth')->group(function () {
@@ -23,3 +25,6 @@ Route::middleware(['auth:sanctum', 'throttle:authenticated'])->group(function ()
     Route::post('logout', [AuthController::class, 'logout'])->name('api.v1.logout');
     Route::get('me', [AuthController::class, 'me'])->name('api.v1.me');
 });
+
+Route::apiResource('card-holders', \App\Http\Controllers\Api\V1\CardHolderController::class);
+Route::apiResource('credit-cards', \App\Http\Controllers\Api\V1\CreditCardController::class);

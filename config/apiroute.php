@@ -23,6 +23,26 @@ return [
             'documentation' => null,
             'rate_limit' => null,
         ],
+        'v2' => [
+            'routes' => base_path('routes/api/v2.php'),
+            'middleware' => [],
+            'status' => 'active',
+            'deprecated_at' => null,
+            'sunset_at' => null,
+            'successor' => null,
+            'documentation' => null,
+            'rate_limit' => null,
+        ],
+        'v3' => [
+            'routes' => base_path('routes/api/v3.php'),
+            'middleware' => [],
+            'status' => 'active',
+            'deprecated_at' => null,
+            'sunset_at' => null,
+            'successor' => null,
+            'documentation' => null,
+            'rate_limit' => null,
+        ],
     ],
 
     /*

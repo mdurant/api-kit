@@ -1,22 +1,45 @@
-# Laravel API Kit
+# Laravel API Kit - Card Holder & Credit Card Management
 
-A production-ready, API-only Laravel 12 starter kit following the 2024-2025 REST API ecosystem best practices. No frontend dependencies - purely headless API for mobile apps, SPAs, or microservices.
+## Overview
 
-[![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue)](https://php.net)
-[![Laravel Version](https://img.shields.io/badge/Laravel-12.x-red)](https://laravel.com)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+This project is built using the Laravel API Kit and implements a credit card management system. It features **API Versioning (v1, v2, v3)** and functional APIs for managing **CardHolders** and **CreditCards**.
 
-## Features
+## Implemented Features
 
-- **API-Only** - No Blade, Vite, or frontend assets
-- **Token Authentication** - Laravel Sanctum for mobile/SPA auth
-- **API Versioning** - URI-based versioning with deprecation support via [grazulex/laravel-apiroute](https://github.com/Grazulex/laravel-apiroute)
-- **Query Building** - Filtering, sorting, includes via [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder)
-- **Data Objects** - Type-safe DTOs via [spatie/laravel-data](https://github.com/spatie/laravel-data)
-- **Auto Documentation** - Zero-annotation OpenAPI 3.1 via [dedoc/scramble](https://github.com/dedoc/scramble)
-- **Modern Testing** - Pest PHP with Laravel HTTP testing
-- **Rate Limiting** - Configurable per-route rate limiters
-- **Standardized Responses** - Consistent JSON response format
+### 1. API Versioning
+
+- **Configured Versions**: `v1`, `v2`, `v3` defined in `config/apiroute.php`.
+- **Routes**:
+    - `routes/api/v1.php`: Core functionality (CardHolders, CreditCards).
+    - `routes/api/v2.php`: Placeholder for V2.
+    - `routes/api/v3.php`: Placeholder for V3.
+- **Verification**:
+    - `GET /api/v2` -> `{"message": "API v2 is working"}`
+    - `GET /api/v3` -> `{"message": "API v3 is working"}`
+
+### 2. Functional APIs (v1)
+
+#### Database Schema
+
+- **CardHolders**: `first_name`, `last_name`, `birth_date`, `nationality`, `profession`, `declared_income`, `sex`, `birth_country`.
+- **CreditCards**: `card_number` (16 chars, unique), `valid_thru`, `cvv`, `is_active`, linked to `card_holder_id`.
+
+#### Endpoints
+
+| Method    | Endpoint                    | Description                                    |
+| :-------- | :-------------------------- | :--------------------------------------------- |
+| GET       | `/api/v1/card-holders`      | List card holders (supports sorting/filtering) |
+| POST      | `/api/v1/card-holders`      | Create a new card holder                       |
+| GET       | `/api/v1/card-holders/{id}` | Show details (includes credit cards)           |
+| PUT/PATCH | `/api/v1/card-holders/{id}` | Update details                                 |
+| DELETE    | `/api/v1/card-holders/{id}` | Remove card holder                             |
+| GET       | `/api/v1/credit-cards`      | List credit cards                              |
+| POST      | `/api/v1/credit-cards`      | Create a new credit card                       |
+| GET       | `/api/v1/credit-cards/{id}` | Show details                                   |
+| PUT/PATCH | `/api/v1/credit-cards/{id}` | Update details                                 |
+| DELETE    | `/api/v1/credit-cards/{id}` | Remove credit card                             |
+
+## Core Kit Features
 
 ## Requirements
 
@@ -98,19 +121,20 @@ curl -X POST http://localhost:8080/api/v1/register \
 ```
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "user": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com",
-      "created_at": "2025-01-15T10:30:00+00:00"
-    },
-    "token": "1|abc123..."
-  }
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "created_at": "2025-01-15T10:30:00+00:00"
+        },
+        "token": "1|abc123..."
+    }
 }
 ```
 
@@ -148,12 +172,12 @@ curl -X POST http://localhost:8080/api/v1/logout \
 
 ### Version 1 (`/api/v1`)
 
-| Method | Endpoint    | Auth | Description              | Rate Limit |
-|--------|-------------|------|--------------------------|------------|
-| POST   | /register   | No   | Register new user        | 5/min      |
-| POST   | /login      | No   | Get authentication token | 5/min      |
-| POST   | /logout     | Yes  | Revoke current token     | 60/min     |
-| GET    | /me         | Yes  | Get current user profile | 60/min     |
+| Method | Endpoint  | Auth | Description              | Rate Limit |
+| ------ | --------- | ---- | ------------------------ | ---------- |
+| POST   | /register | No   | Register new user        | 5/min      |
+| POST   | /login    | No   | Get authentication token | 5/min      |
+| POST   | /logout   | Yes  | Revoke current token     | 60/min     |
+| GET    | /me       | Yes  | Get current user profile | 60/min     |
 
 ## Response Format
 
@@ -163,11 +187,11 @@ All API responses follow a consistent format:
 
 ```json
 {
-  "success": true,
-  "message": "Operation successful",
-  "data": {
-    // Response data here
-  }
+    "success": true,
+    "message": "Operation successful",
+    "data": {
+        // Response data here
+    }
 }
 ```
 
@@ -175,28 +199,28 @@ All API responses follow a consistent format:
 
 ```json
 {
-  "success": false,
-  "message": "Error description",
-  "errors": {
-    "field": ["Validation error message"]
-  }
+    "success": false,
+    "message": "Error description",
+    "errors": {
+        "field": ["Validation error message"]
+    }
 }
 ```
 
 ### HTTP Status Codes
 
-| Code | Description |
-|------|-------------|
-| 200  | Success |
-| 201  | Resource created |
-| 204  | No content |
-| 400  | Bad request |
-| 401  | Unauthorized |
-| 403  | Forbidden |
-| 404  | Not found |
-| 422  | Validation error |
+| Code | Description       |
+| ---- | ----------------- |
+| 200  | Success           |
+| 201  | Resource created  |
+| 204  | No content        |
+| 400  | Bad request       |
+| 401  | Unauthorized      |
+| 403  | Forbidden         |
+| 404  | Not found         |
+| 422  | Validation error  |
 | 429  | Too many requests |
-| 500  | Server error |
+| 500  | Server error      |
 
 ## Project Structure
 
@@ -318,6 +342,7 @@ return UserResource::collection($users);
 ```
 
 **Request examples:**
+
 ```
 GET /api/v1/users?filter[name]=john
 GET /api/v1/users?sort=-created_at
@@ -354,11 +379,11 @@ public function store(UserData $data): JsonResponse
 
 Configured in `app/Providers/AppServiceProvider.php`:
 
-| Limiter | Limit | Use Case |
-|---------|-------|----------|
-| `api` | 60/min | Default for all API routes |
-| `auth` | 5/min | Login/register (brute force protection) |
-| `authenticated` | 120/min | Logged-in users |
+| Limiter         | Limit   | Use Case                                |
+| --------------- | ------- | --------------------------------------- |
+| `api`           | 60/min  | Default for all API routes              |
+| `auth`          | 5/min   | Login/register (brute force protection) |
+| `authenticated` | 120/min | Logged-in users                         |
 
 ### Applying Rate Limiters
 
@@ -528,11 +553,13 @@ COPY docker/php/php.ini /usr/local/etc/php/conf.d/
 ### Adding a New Resource (CRUD Example)
 
 1. **Create Model & Migration:**
+
 ```bash
 docker compose run --rm app php artisan make:model Post -m
 ```
 
 2. **Create Controller:**
+
 ```php
 // app/Http/Controllers/Api/V1/PostController.php
 namespace App\Http\Controllers\Api\V1;
@@ -565,6 +592,7 @@ class PostController extends ApiController
 ```
 
 3. **Create Resource:**
+
 ```php
 // app/Http/Resources/PostResource.php
 namespace App\Http\Resources;
@@ -587,6 +615,7 @@ class PostResource extends JsonResource
 ```
 
 4. **Add Routes:**
+
 ```php
 // routes/api/v1.php
 Route::middleware('auth:sanctum')->group(function () {
@@ -596,6 +625,7 @@ Route::middleware('auth:sanctum')->group(function () {
 ```
 
 5. **Create Tests:**
+
 ```php
 // tests/Feature/Api/V1/PostTest.php
 uses(RefreshDatabase::class);
